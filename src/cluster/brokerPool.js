@@ -210,10 +210,7 @@ module.exports = class BrokerPool {
         const replacedBrokersDisconnects = replacedBrokers.map(broker => broker.disconnect())
         await Promise.all([...brokerDisconnects, ...replacedBrokersDisconnects])
       } catch (e) {
-        if (e.type === 'LEADER_NOT_AVAILABLE') {
-          throw e
-        }
-
+        if (e.retriable) throw e
         bail(e)
       }
     })
